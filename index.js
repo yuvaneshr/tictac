@@ -33,21 +33,32 @@ function initializeGrid() {
 }
 
 function getRowBoxes(colIdx) {
+    console.log('colid',+colIdx);
     let rowDivs = '';
-    
+    //localStorage.setItem('tic_tac', '1');
     for(let rowIdx=0; rowIdx < GRID_LENGTH ; rowIdx++ ) {
         let additionalClass = 'darkBackground';
         let content = '';
         const sum = colIdx + rowIdx;
+        console.log('sum',sum);
         if (sum%2 === 0) {
             additionalClass = 'lightBackground'
         }
         const gridValue = grid[colIdx][rowIdx];
-        if(gridValue === 1) {
+        console.log('gridvalue'+turn);
+        if(gridValue == 1) {
+//if (turn == 'X'){
+            localStorage.setItem('tic_tac', '2');
+            //turn = 'O';
             content = '<span class="cross">X</span>';
+            //additionalClass+= ' x';
         }
-        else if (gridValue === 2) {
+        else if (gridValue == 2) {
+           // else if (turn == 'O'){
+                //turn = 'X';
+            localStorage.setItem('tic_tac', '1');
             content = '<span class="cross">O</span>';
+            //additionalClass+= ' o';
         }
         rowDivs = rowDivs + '<div colIdx="'+ colIdx +'" rowIdx="' + rowIdx + '" class="box ' +
             additionalClass + '">' + content + '</div>';
@@ -67,17 +78,24 @@ function getColumns() {
 
 function renderMainGrid() {
     const parent = document.getElementById("grid");
+    console.log('parent',+parent);
     const columnDivs = getColumns();
+    console.log('parent',+columnDivs);
     parent.innerHTML = '<div class="columnsStyle">' + columnDivs + '</div>';
 }
 
 function onBoxClick() {
     var rowIdx = this.getAttribute("rowIdx");
     var colIdx = this.getAttribute("colIdx");
-    let newValue = 1;
+    var getNewValue = localStorage.getItem('tic_tac');
+    console.log('yuavn'+getNewValue);
+    let newValue = getNewValue;
+
     grid[colIdx][rowIdx] = newValue;
+
     renderMainGrid();
     addClickHandlers();
+    successAlert();
 }
 
 function addClickHandlers() {
@@ -85,6 +103,44 @@ function addClickHandlers() {
     for (var idx = 0; idx < boxes.length; idx++) {
         boxes[idx].addEventListener('click', onBoxClick, false);
     }
+}
+
+function successAlert(){
+
+    for(let rowIdx=0; rowIdx < GRID_LENGTH ; rowIdx++ ) {
+          
+        if($('div.box[rowidx="'+rowIdx+'"]').find('span').text() == 'X'.repeat(GRID_LENGTH)) {
+        alert ('X Wins');
+        } else if($('div.box[rowidx="'+rowIdx+'"]').find('span').text() == 'O'.repeat(GRID_LENGTH)) {
+alert ('O wins');
+        }
+
+    
+    }
+
+
+
+    for(let colIdx=0; colIdx < GRID_LENGTH ; colIdx++ ) {
+        if($('div.box[colidx="'+colIdx+'"]').find('span').text() == 'X'.repeat(GRID_LENGTH)) {
+            alert ('X Wins');
+        } else if($('div.box[colidx="'+colIdx+'"]').find('span').text() == 'O'.repeat(GRID_LENGTH)) {
+            alert ('O wins');
+
+        }
+        
+       
+    }  
+
+    for(let colIdx=0; colIdx < GRID_LENGTH ; colIdx++ ) {
+        if($('div.box[rowidx="'+colIdx+'"][colidx="'+colIdx+'"]').find('span').text() == 'X'.repeat(GRID_LENGTH)) {
+            alert ('X Wins');
+        } else if($('div.box[rowidx="'+colIdx+'"][colidx="'+colIdx+'"]').find('span').text() == 'O'.repeat(GRID_LENGTH)) {
+            alert ('O wins');
+
+        }
+        
+       
+    }  
 }
 
 initializeGrid();
